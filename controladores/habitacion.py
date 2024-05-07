@@ -87,3 +87,11 @@ class Habitacion():
             cursor.execute(sql)
             result = cursor.fetchall()
             return result
+
+    def obtenerTablaNivel(self):
+        with self.conn.cursor() as cursor:
+            sql = """SELECT * FROM nivelhabitacion"""
+
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            return result

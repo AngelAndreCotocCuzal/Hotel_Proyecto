@@ -8,9 +8,11 @@ from modelos.control_usuario import ModeloUsuario
 from modelos.control_TipoUsuario import ModeloTipoUsuario
 from modelos.control_huesped import ModeloHuesped
 from modelos.control_habitacion import ModeloHabitacion
+from modelos.control_nivel import ModeloNivel
 import bcrypt
 
 Ui_MainWindow, QMainWindow = loadUiType('view/interfaz.ui')
+
 
 class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
     def __init__(self, user, main_login) -> None:
@@ -19,6 +21,7 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         self.ModeloTipoUsuario = ModeloTipoUsuario()
         self.ModeloHuesped = ModeloHuesped()
         self.ModeloHabitacion = ModeloHabitacion()
+        self.ModeloNivel = ModeloNivel()
         # self.model = Modelo_pro()
         super().__init__()
         self.setupUi(self)
@@ -33,6 +36,7 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         self.btn_registro.clicked.connect(self.mostrar_pagina_registro)
         self.btn_usuario.clicked.connect(self.mostrar_pagina_usuario)
         self.btn_hab.clicked.connect(self.mostrar_pagina_habitacion)
+        self.btn_nivel.clicked.connect(self.mostrar_pagina_nivel)
         # -------------------------- Botones Cocina ------------------------------------------
 
         self.btn_listar.clicked.connect(lambda: self.ModeloCocina.listarAlimento(self.tabla_cocina))
@@ -76,6 +80,10 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         self.agre_piso.clicked.connect(self.agregar_planta)
         self.btn_hab.clicked.connect(lambda: self.ModeloHabitacion.listarHabitacion(self.tablaHabitacion))
 
+        # --------------------------------------------- Botones de Nivel -----------------------------
+        self.btn_nivel.clicked.connect(lambda: self.ModeloNivel.listarNivel(self.tablaNivel))
+
+
     # Codigo de pestañas
     def cambiar_nombres_de_pestanas(self):
         # Aquí asumimos que tienes una función que obtiene el número de pestañas desde la base de datos
@@ -96,7 +104,7 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
             self.tab_recepcion.setTabText(i, f"Piso {i+1}")
 
     def obtener_numero_de_pestanas_desde_bd(self):
-        numeroh = self.ModeloHabitacion.NoNivele()
+        numeroh = self.ModeloNivel.NoNivele()
         return numeroh
 
     # -------------------------------- Metodos de Habitaciones -------------------------------------
@@ -140,21 +148,22 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
     def mostrar_pagina_habitacion(self):
         self.stackedWidget.setCurrentWidget(self.pg_habitacion)
         self.tablaHabitacion.setColumnWidth(0,50)
-        self.tablaHabitacion.setColumnWidth(1,150)
-        self.tablaHabitacion.setColumnWidth(2,150)
-        self.tablaHabitacion.setColumnWidth(3,150)
-        self.tablaHabitacion.setColumnWidth(4,150)
-        self.tablaHabitacion.setColumnWidth(5,150)
-        self.tablaHabitacion.setColumnWidth(6,150)
+        self.tablaHabitacion.setColumnWidth(1,100)
+        self.tablaHabitacion.setColumnWidth(2,70)
+        self.tablaHabitacion.setColumnWidth(3,255)
+        self.tablaHabitacion.setColumnWidth(4,100)
+        self.tablaHabitacion.setColumnWidth(5,80)
+        self.tablaHabitacion.setColumnWidth(6,80)
 
-        for i in range(self.tablaHabitacion.rowCount()):
-            for j in range(self.tablaHabitacion.columnCount()):
-                item = self.tablaHabitacion.item(i, j)
-                if not item:
-                    item = QTableWidgetItem("")  # Crea un QTableWidgetItem si la celda está vacía
-                    self.tablaHabitacion.setItem(i, j, item)
-                item.setTextAlignment(Qt.AlignVCenter)
-    
+
+    def mostrar_pagina_nivel(self):
+        self.stackedWidget.setCurrentWidget(self.pg_nivel)
+        self.tablaNivel.setColumnWidth(0,50)
+        self.tablaNivel.setColumnWidth(1,450)
+        self.tablaNivel.setColumnWidth(2,80)
+        self.tablaNivel.setColumnWidth(3,80)
+        self.tablaNivel.horizontalHeader().setDefaultAlignment(Qt.AlignLeft)
+
     def registrar(self):
         nombre = self.lnx_1nombre_2.text()
         user = self.lnx_usuario_2.text()
