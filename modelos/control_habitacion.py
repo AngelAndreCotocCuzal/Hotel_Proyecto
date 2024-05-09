@@ -36,8 +36,9 @@ class ModeloHabitacion():
     def edit_row(self, row):
         print(f"se edita el botn: {row}")
 
-    def CrearHabitacion(self, Numero, Estado, Categoria, Detalle, Nivel):
+
+    def CrearHabitacion(self, Numero, Detalle, Categoria, Nivel, Estado):
         if Numero and Estado and Categoria and Detalle and Nivel:
-            self.modeloHabitacion.insertarHabitacion(Numero, Estado, Categoria, Detalle, Nivel)
+            self.modeloHabitacion.insertarHabitacion(Numero, Detalle, Categoria, Nivel, Estado)
 
 

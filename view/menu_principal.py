@@ -3,12 +3,17 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSizePolicy, QTabWidget
 from PyQt5.QtCore import Qt
+from PyQt5.QtCore import pyqtSignal
+from view.CrearNivel import CrearNivel
+from view.CrearCategoria import CrearCategoria
+from view.Crearhabitacion import CrearHabitacion
 from modelos.control_cocina import ModeloCocina
 from modelos.control_usuario import ModeloUsuario
 from modelos.control_TipoUsuario import ModeloTipoUsuario
 from modelos.control_huesped import ModeloHuesped
 from modelos.control_habitacion import ModeloHabitacion
 from modelos.control_nivel import ModeloNivel
+from modelos.control_Categoria import ModeloCategoria
 import bcrypt
 
 Ui_MainWindow, QMainWindow = loadUiType('view/interfaz.ui')
@@ -22,13 +27,19 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         self.ModeloHuesped = ModeloHuesped()
         self.ModeloHabitacion = ModeloHabitacion()
         self.ModeloNivel = ModeloNivel()
+        self.ModeloCategoria = ModeloCategoria()
+
         # self.model = Modelo_pro()
         super().__init__()
         self.setupUi(self)
         self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-
         self.cambiar_nombres_de_pestanas()
+
+        # Listar todas las tablas
+        self.ModeloNivel.listarNivel(self.tablaNivel)
+        self.ModeloHabitacion.listarHabitacion(self.tablaHabitacion)
+        self.ModeloCategoria.listarCategoria(self.tablaCategoria)
         
         # -------------------------- Conectar Botones con Pagina  ---------------------------
         self.btn_habitacion.clicked.connect(self.mostrar_pagina_recepcion)
@@ -37,6 +48,7 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         self.btn_usuario.clicked.connect(self.mostrar_pagina_usuario)
         self.btn_hab.clicked.connect(self.mostrar_pagina_habitacion)
         self.btn_nivel.clicked.connect(self.mostrar_pagina_nivel)
+        self.btn_categoria.clicked.connect(self.mostrar_pagina_categoria)
         # -------------------------- Botones Cocina ------------------------------------------
 
         self.btn_listar.clicked.connect(lambda: self.ModeloCocina.listarAlimento(self.tabla_cocina))
@@ -78,11 +90,32 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
 
         # -------------------------------------------------- Botones Habbitacion --------------------
         self.agre_piso.clicked.connect(self.agregar_planta)
-        self.btn_hab.clicked.connect(lambda: self.ModeloHabitacion.listarHabitacion(self.tablaHabitacion))
 
         # --------------------------------------------- Botones de Nivel -----------------------------
-        self.btn_nivel.clicked.connect(lambda: self.ModeloNivel.listarNivel(self.tablaNivel))
+        self.btn_crearNiv.clicked.connect(self.pg_CrearNiv)
 
+        # ---------------------------------------------- Botones de Categoria -----------------------
+        self.btn_crearCat.clicked.connect(self.pg_CrearCat)
+
+        # ------------------------------------------- Botones de habitacion -------------------------
+        self.btn_crearHab.clicked.connect(self.pg_CrearHabitacion)
+
+    def pg_CrearHabitacion(self):
+        self.crearHabitacionWindow = CrearHabitacion(self.tablaHabitacion)
+        self.crearHabitacionWindow.show()
+
+    def pg_CrearCat(self):
+        self.crearCategoriaWindow = CrearCategoria(self.tablaCategoria)
+        self.crearCategoriaWindow.show()
+
+    # Metodo para conencta pestañas
+    def pg_CrearNiv(self):
+        # Instanciar y mostrar la ventana CrearNivel, pasando self como el padre
+        self.crear_nivel_window = CrearNivel(self.tablaNivel)
+        self.crear_nivel_window.show()
+
+
+        # self.crear_nivel_window.finished.connect(self.enable_main_window)
 
     # Codigo de pestañas
     def cambiar_nombres_de_pestanas(self):
@@ -163,6 +196,9 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         self.tablaNivel.setColumnWidth(2,80)
         self.tablaNivel.setColumnWidth(3,80)
         self.tablaNivel.horizontalHeader().setDefaultAlignment(Qt.AlignLeft)
+
+    def mostrar_pagina_categoria(self):
+        self.stackedWidget.setCurrentWidget(self.pg_categoria)
 
     def registrar(self):
         nombre = self.lnx_1nombre_2.text()

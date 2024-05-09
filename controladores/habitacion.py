@@ -1,7 +1,7 @@
 from bd.conexion import conecciones
 
 
-class Habitacion():
+class Habitacion:
     def __init__(self) -> None:
         self.conn = conecciones()  # Llama a la función para obtener la conexión
 
@@ -14,6 +14,8 @@ class Habitacion():
             count = 1
         else:
             count += 1
+
+
         return count
 
     def obtener_idPisoHabitacion(self):
@@ -52,7 +54,7 @@ class Habitacion():
     def insertarNivelHabitacion(self, Nombre, Nivel):
         id = self.obtener_idPisoHabitacion()
         with self.conn.cursor() as cursor:
-            sql = """INSERT INTO nivelhabitacion (`idNivelHabitacion`, `Nombre`, `Nivel`) VALUES (%s,%s,%s)"""
+            sql = """INSERT INTO nivelhabitacion (idNivelHabitacion, Nombre, Nivel) VALUES (%s,%s,%s)"""
             cursor.execute(sql, (id, Nombre, Nivel))
             self.conn.commit()
 
@@ -91,6 +93,30 @@ class Habitacion():
     def obtenerTablaNivel(self):
         with self.conn.cursor() as cursor:
             sql = """SELECT * FROM nivelhabitacion"""
+
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            return result
+
+    def obtenerTodosLosDatosNivel(self):
+        with self.conn.cursor() as cursor:
+            sql = """SELECT * FROM nivelhabitacion"""
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            return result
+
+    def obtenerNivelhabitaciontodos(self):
+        with self.conn.cursor() as cursor:
+            sql = """SELECT * FROM nivelhabitacion"""
+
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            return result
+
+
+    def obtenerEstadoHabitacion(self):
+        with self.conn.cursor() as cursor:
+            sql = """SELECT * FROM estadohabitacion"""
 
             cursor.execute(sql)
             result = cursor.fetchall()
