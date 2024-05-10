@@ -41,4 +41,12 @@ class ModeloHabitacion():
         if Numero and Estado and Categoria and Detalle and Nivel:
             self.modeloHabitacion.insertarHabitacion(Numero, Detalle, Categoria, Nivel, Estado)
 
+    def obtenerDatosHabitacionInterfaz(self):
+        habitacion = self.modeloHabitacion.obtenerDatosHabitacionInterfaz()
+        print(habitacion)
+        return habitacion
+
+    def updateEstadoHabitacion(self, estado, idHabitacion):
+        self.modeloHabitacion.ActualizarEstadoHabitacion(estado, idHabitacion)
+
 

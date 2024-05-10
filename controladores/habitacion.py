@@ -5,6 +5,16 @@ class Habitacion:
     def __init__(self) -> None:
         self.conn = conecciones()  # Llama a la función para obtener la conexión
 
+    def obtenerDatosHabitacionInterfaz(self):
+        with self.conn.cursor() as cursor:
+            sql = """SELECT h.NoHabitacion, c.Nombre, e.Estado, n.Nombre FROM habitaciones h 
+            inner join categoriahabitacion c on h.CategoriaHabitacion_idCategoriaHabitacion = c.idCategoriaHabitacion
+            inner join nivelhabitacion n on h.NivelHabitacion_idNivelHabitacion = n.idNivelHabitacion 
+            inner join estadohabitacion e on h.EstadoHabitacion_id1 = e.id"""
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            return result
+
     def obtener_idHabitacion(self):
         cursor = self.conn.cursor()
         cursor.execute("SELECT MAX(id) FROM habitaciones")
@@ -42,6 +52,10 @@ class Habitacion:
             result = cursor.fetchall()
             return result
 
+    # ****** Este metodo es para obtener todos lo datos de habitacion que se van a mostrar en el boton
+    # ****** de recepcion en la interfaz
+
+
     def insertarHabitacion(self, Numero, Detalle, Categoria, Nivel, Estado):
         id = self.obtener_idHabitacion()
         with self.conn.cursor() as cursor:
@@ -65,6 +79,16 @@ class Habitacion:
             NivelHabitacion_idNivelHabitacion = %s,
             EstadoHabitacion_id1 = %s WHERE id = %s"""
             cursor.execute(sql, (Numero, Detalle, Categoria, Nivel, Estado, Id))
+            self.conn.commit()
+
+    def ActualizarEstadoHabitacion(self, Estado, id):
+        print(f"este es el estado que llega: {Estado}")
+        print(f"este es el id qu ellega: {id}")
+        with self.conn.cursor() as cursor:
+            sql = """UPDATE habitaciones 
+                     SET `EstadoHabitacion_id1` = %s
+                     WHERE id = %s"""
+            cursor.execute(sql, (Estado, id))
             self.conn.commit()
 
     def obtenerHabitacion(self, cod):

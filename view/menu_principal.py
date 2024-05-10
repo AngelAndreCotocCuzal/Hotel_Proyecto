@@ -7,6 +7,7 @@ from PyQt5.QtCore import pyqtSignal
 from view.CrearNivel import CrearNivel
 from view.CrearCategoria import CrearCategoria
 from view.Crearhabitacion import CrearHabitacion
+from view.crearHospedamiento import CrearHospedamiento
 from modelos.control_cocina import ModeloCocina
 from modelos.control_usuario import ModeloUsuario
 from modelos.control_TipoUsuario import ModeloTipoUsuario
@@ -14,7 +15,9 @@ from modelos.control_huesped import ModeloHuesped
 from modelos.control_habitacion import ModeloHabitacion
 from modelos.control_nivel import ModeloNivel
 from modelos.control_Categoria import ModeloCategoria
+from modelos.control_hospedaje import ModeloHospedaje
 import bcrypt
+import functools
 
 Ui_MainWindow, QMainWindow = loadUiType('view/interfaz.ui')
 
@@ -28,18 +31,26 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         self.ModeloHabitacion = ModeloHabitacion()
         self.ModeloNivel = ModeloNivel()
         self.ModeloCategoria = ModeloCategoria()
+        self.ModeloHospedaje = ModeloHospedaje()
 
         # self.model = Modelo_pro()
         super().__init__()
         self.setupUi(self)
         self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-        self.cambiar_nombres_de_pestanas()
+
 
         # Listar todas las tablas
         self.ModeloNivel.listarNivel(self.tablaNivel)
         self.ModeloHabitacion.listarHabitacion(self.tablaHabitacion)
         self.ModeloCategoria.listarCategoria(self.tablaCategoria)
+
+        # ---------Estos botones son para asignar el nombre a los niveles y saber cuantos
+        #  hay para colocar ese numero de pestañas-----------------------------
+        self.actualizar_paneles_y_botones()
+        self.btn_habitacion.clicked.connect(self.actualizar_paneles_y_botones)
+        self.btn_actualizarH_2.clicked.connect(self.actualizarBotonesHabitacion)
+
         
         # -------------------------- Conectar Botones con Pagina  ---------------------------
         self.btn_habitacion.clicked.connect(self.mostrar_pagina_recepcion)
@@ -58,6 +69,8 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
                                                                                         self.lnl_entrada.text(),
                                                                                         self.lnl_vencimiento.text(), 
                                                                                         self.tabla_cocina))
+
+
 
         # --------------------------------- Botones Usuario ----------------------------------
 
@@ -100,6 +113,154 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         # ------------------------------------------- Botones de habitacion -------------------------
         self.btn_crearHab.clicked.connect(self.pg_CrearHabitacion)
 
+
+    # Dentro del método cambiar_nombres_de_pestanas():
+
+    def actualizarBotonesHabitacion(self):
+        # Limpiar los botones existentes
+        self.clearBotonesHabitacion()
+
+        # Obtener datos de las habitaciones
+        habitaciones = self.ModeloHabitacion.obtenerDatosHabitacionInterfaz()
+
+        # Obtener la lista de IDs de habitaciones ocupadas
+        ids_habitaciones_ocupadas = self.ModeloHospedaje.obtenerIdsHabitacionesOcupadas()
+
+        # Obtener el índice de la pestaña actual en tab_recepcion
+        indice_pestaña_actual = self.tab_recepcion.currentIndex()
+
+        # Obtener el widget de la pestaña actual
+        widget_pestaña_actual = self.tab_recepcion.widget(indice_pestaña_actual)
+
+        # Obtener el layout del widget de la pestaña actual
+        layout_pestaña_actual = widget_pestaña_actual.layout()
+
+        # Crear botones de habitación para cada habitación y agregarlos al layout de la pestaña actual
+        for habitacion in habitaciones:
+            estado = habitacion[2]
+            # Determinar el estado del botón según el estado de la habitación
+            if estado == "ocupado":
+                estado_boton = "Ocupado"
+            else:
+                estado_boton = "Libre"
+
+            # Crear un botón para la habitación con su número, tipo y estado
+            button = QPushButton(f"Habitación {habitacion[0]}\nTipo: {habitacion[1]}\nEstado: {estado_boton}")
+            # Conectar el botón a la función pg_CrearHospedamiento con el número de habitación correspondiente
+            button.clicked.connect(lambda _, num=habitacion[0]: self.pg_CrearHospedamiento(num))
+            layout_pestaña_actual.addWidget(button)
+
+    def clearBotonesHabitacion(self):
+        # Obtener el índice de la pestaña actual en tab_recepcion
+        indice_pestaña_actual = self.tab_recepcion.currentIndex()
+
+        # Obtener el widget de la pestaña actual
+        widget_pestaña_actual = self.tab_recepcion.widget(indice_pestaña_actual)
+
+        # Obtener el layout del widget de la pestaña actual
+        layout_pestaña_actual = widget_pestaña_actual.layout()
+
+        # Eliminar todos los widgets del layout de la pestaña actual
+        for i in reversed(range(layout_pestaña_actual.count())):
+            widget = layout_pestaña_actual.itemAt(i).widget()
+            if widget is not None:
+                widget.deleteLater()
+
+    def actualizar_paneles_y_botones(self):
+        # Obtener el número de niveles desde la base de datos
+        numero_de_niveles = self.obtener_numero_de_niveles_desde_bd()
+
+        # Limpiar pestañas
+        self.tab_recepcion.clear()
+
+        # Crear un diccionario para mapear los niveles a las habitaciones correspondientes
+        habitaciones_por_nivel = {}
+
+        # Obtener datos de las habitaciones
+        habitaciones = self.ModeloHabitacion.obtenerDatosHabitacionInterfaz()
+
+        # Obtener la lista de IDs de habitaciones asociadas al cliente
+        lista_ids_habitaciones_cliente = self.ModeloHospedaje.habitacionesenuso()
+
+        # Convertir la lista de IDs de habitaciones asociadas al cliente en una lista de números de habitación
+        numeros_habitacion_cliente = [habitacion[1] for habitacion in lista_ids_habitaciones_cliente]
+
+        # Agrupar las habitaciones por nivel
+        for habitacion in habitaciones:
+            nivel = habitacion[3]
+            if nivel not in habitaciones_por_nivel:
+                habitaciones_por_nivel[nivel] = []
+            habitaciones_por_nivel[nivel].append(habitacion)
+
+        # Crear pestañas y botones de habitación para cada nivel
+        for nivel in range(1, numero_de_niveles + 1):
+            # Crear una pestaña para el nivel actual
+            tab = QWidget()
+            layout = QVBoxLayout()
+
+            # Obtener las habitaciones para el nivel actual
+            habitaciones_nivel = habitaciones_por_nivel.get(f"Nivel {nivel}", [])
+
+            # Crear botones de habitación para el nivel actual
+            for habitacion in habitaciones_nivel:
+                estado = habitacion[2]
+                # Verificar si la habitación está asociada al cliente y actualizar el estado
+                if habitacion[0] in [id_habitacion[0] for id_habitacion in
+                                     lista_ids_habitaciones_cliente] and estado == "libre":
+                    estado = "ocupado"  # Cambiar el estado a "ocupado"
+
+                button = QPushButton(f"Habitación {habitacion[0]}\nTipo: {habitacion[1]}\nEstado: {estado}")
+                # Conecta la señal clicked del botón a la función pg_CrearHospedamiento con el número de habitación correspondiente
+                button.clicked.connect(lambda _, num=habitacion[0]: self.pg_CrearHospedamiento(num))
+                layout.addWidget(button)
+
+            # Establecer el diseño en la pestaña y agregarla al QTabWidget
+            tab.setLayout(layout)
+            self.tab_recepcion.addTab(tab, f"Nivel {nivel}")
+
+        # Actualizar la interfaz gráfica
+        self.tab_recepcion.setCurrentIndex(0)
+
+    def pg_CrearHospedamiento(self, numero_habitacion):
+        self.crearHabitacionWindow = CrearHospedamiento(numero_habitacion)
+        self.crearHabitacionWindow.show()
+
+    def obtener_numero_de_niveles_desde_bd(self):
+        # Suponiendo que hay un método en ModeloNivel que devuelve el número de niveles
+        # Reemplaza 'NoNivele()' con el método real si tiene un nombre diferente
+        numero_niveles = self.ModeloNivel.NoNivele()
+        return numero_niveles
+
+    def cambiar_nombres_de_pestanas_prueba(self):
+        # Obtener datos de las habitaciones
+        habitaciones = self.ModeloHabitacion.obtenerDatosHabitacionInterfaz()
+
+        # Imprimir los datos de las habitaciones
+        print("Datos de habitaciones:", habitaciones)
+
+        # Limpiar pestañas
+        self.tab_recepcion.clear()
+
+        # Crear pestañas y botones de habitación para cada nivel
+        for nivel in set(habitacion[3] for habitacion in habitaciones):
+            # Crear una pestaña para el nivel actual
+            tab = QWidget()
+            layout = QVBoxLayout()
+
+            # Obtener las habitaciones para el nivel actual
+            habitaciones_nivel = [habitacion for habitacion in habitaciones if habitacion[3] == nivel]
+
+            # Crear botones de habitación para el nivel actual
+            widget = self.crear_botones_habitacion(habitaciones_nivel, nivel)
+
+            # Agregar el widget de botones al diseño de la pestaña
+            layout.addWidget(widget)
+
+            # Establecer el diseño en la pestaña y agregarla al QTabWidget
+            tab.setLayout(layout)
+            self.tab_recepcion.addTab(tab, nivel)
+
+
     def pg_CrearHabitacion(self):
         self.crearHabitacionWindow = CrearHabitacion(self.tablaHabitacion)
         self.crearHabitacionWindow.show()
@@ -118,27 +279,34 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         # self.crear_nivel_window.finished.connect(self.enable_main_window)
 
     # Codigo de pestañas
+
     def cambiar_nombres_de_pestanas(self):
-        # Aquí asumimos que tienes una función que obtiene el número de pestañas desde la base de datos
-        numero_de_pestanas_desde_bd = self.obtener_numero_de_pestanas_desde_bd()
+        # Obtener el número de niveles desde la base de datos
+        numero_de_niveles_desde_bd = self.obtener_numero_de_niveles_desde_bd()
 
         # Obtener el número actual de pestañas
         numero_de_pestanas_actuales = self.tab_recepcion.count()
 
-        # Si hay más pestañas en la BD que las actuales, agregamos pestañas adicionales
-        if numero_de_pestanas_desde_bd > numero_de_pestanas_actuales:
-            for i in range(numero_de_pestanas_actuales, numero_de_pestanas_desde_bd):
+        # Si hay más niveles en la BD que las actuales, agregamos pestañas adicionales
+        if numero_de_niveles_desde_bd > numero_de_pestanas_actuales:
+            for i in range(numero_de_pestanas_actuales, numero_de_niveles_desde_bd):
                 # Agregar una nueva pestaña
                 nueva_pestana = QWidget()
-                self.tab_recepcion.addTab(nueva_pestana, f"Piso {i+1}")
+                self.tab_recepcion.addTab(nueva_pestana, f"Nivel {i + 1}")
+
+        # Si hay menos niveles en la BD que las actuales, eliminamos pestañas
+        elif numero_de_niveles_desde_bd < numero_de_pestanas_actuales:
+            for i in range(numero_de_pestanas_actuales - 1, numero_de_niveles_desde_bd - 1, -1):
+                self.tab_recepcion.removeTab(i)
 
         # Cambiar los nombres de las pestañas
-        for i in range(numero_de_pestanas_desde_bd):
-            self.tab_recepcion.setTabText(i, f"Piso {i+1}")
+        for i in range(numero_de_niveles_desde_bd):
+            self.tab_recepcion.setTabText(i, f"Nivel {i + 1}")
 
-    def obtener_numero_de_pestanas_desde_bd(self):
-        numeroh = self.ModeloNivel.NoNivele()
-        return numeroh
+        # Actualizar la interfaz gráfica
+        self.tab_recepcion.setCurrentIndex(0)
+
+
 
     # -------------------------------- Metodos de Habitaciones -------------------------------------
     def agregar_planta(self):
@@ -223,6 +391,7 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
 
         else:
             print("las contraseñas no coinciden")
+
 
     def limpiar_labels_register(self):
         self.lnx_1nombre_2.clear()

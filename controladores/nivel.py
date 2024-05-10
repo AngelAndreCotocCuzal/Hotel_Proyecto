@@ -69,6 +69,13 @@ class RegistrarNivel:
             count += 1
         return count
 
+    def obtener_idPisoHabitacionpornivel(self):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM nivelhabitacion")
+
+        count = cursor.fetchone()[0]
+        return count
+
     def eliminarNivel(self, id):
         with self.conn.cursor() as cursor:
             sql = "DELETE FROM nivelhabitacion WHERE idNivelHabitacion = '" + str(id) + "'"

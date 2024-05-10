@@ -537,17 +537,17 @@ color: rgba(106,105,103,255);
               <string>Agregar Piso</string>
              </property>
             </widget>
-            <widget class="QPushButton" name="pushButton_3">
+            <widget class="QPushButton" name="btn_actualizarH_2">
              <property name="geometry">
               <rect>
-               <x>340</x>
+               <x>350</x>
                <y>10</y>
-               <width>131</width>
+               <width>121</width>
                <height>51</height>
               </rect>
              </property>
              <property name="text">
-              <string>Agregar Habitacion</string>
+              <string>Actualizar habitacion</string>
              </property>
             </widget>
            </widget>
@@ -616,43 +616,100 @@ color: rgba(106,105,103,255);
                 <string notr="true">background-color: rgba(255,255,255,255);</string>
                </property>
                <property name="currentIndex">
-                <number>6</number>
+                <number>0</number>
                </property>
                <widget class="QWidget" name="pg_recepcion">
-                <layout class="QVBoxLayout" name="verticalLayout_3">
-                 <property name="spacing">
+                <widget class="QTabWidget" name="tab_recepcion">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>100</y>
+                   <width>1051</width>
+                   <height>621</height>
+                  </rect>
+                 </property>
+                 <property name="layoutDirection">
+                  <enum>Qt::LeftToRight</enum>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">
+QFrame{
+background-color: rgba(50,66,73,255); /* Cambiar el color de fondo a azul oscuro */
+}
+QPushButton{
+    background:rgba(2,97,98,255);
+    /*border: 1px solid #2361a0; /* Cambiar el color del borde a azul oscuro */
+    border-radius: 10px;
+    font: 75 9pt &quot;MS Shell Dlg 2t&quot;;
+/* Cambiar el color de fondo a azul oscuro */
+    color: white;
+}
+
+QPushButton:hover{
+
+background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(14, 52, 83, 1), stop:1 rgba(14, 52, 83, 1));
+color: rgb(255, 255, 255);
+
+}
+
+QLineEdit{
+background-color: rgb(255,255,255);
+border:none;
+border-bottom:2px solid rgba(46, 82, 101, 200);
+   /*color: #2361a0;*/
+	color:rgba(106,105,103,255);
+
+}
+
+QLabel{
+color: rgba(106,105,103,255);
+}
+</string>
+                 </property>
+                 <property name="currentIndex">
                   <number>0</number>
                  </property>
-                 <property name="leftMargin">
-                  <number>0</number>
+                 <widget class="QWidget" name="tab_3">
+                  <attribute name="title">
+                   <string>Tab 1</string>
+                  </attribute>
+                 </widget>
+                 <widget class="QWidget" name="tab_4">
+                  <attribute name="title">
+                   <string>Tab 2</string>
+                  </attribute>
+                 </widget>
+                </widget>
+                <widget class="QLineEdit" name="lineEdit">
+                 <property name="geometry">
+                  <rect>
+                   <x>10</x>
+                   <y>20</y>
+                   <width>251</width>
+                   <height>21</height>
+                  </rect>
                  </property>
-                 <property name="topMargin">
-                  <number>0</number>
+                </widget>
+                <widget class="QLineEdit" name="lineEdit_5">
+                 <property name="geometry">
+                  <rect>
+                   <x>390</x>
+                   <y>20</y>
+                   <width>251</width>
+                   <height>21</height>
+                  </rect>
                  </property>
-                 <property name="rightMargin">
-                  <number>0</number>
+                </widget>
+                <widget class="QLineEdit" name="lineEdit_6">
+                 <property name="geometry">
+                  <rect>
+                   <x>780</x>
+                   <y>20</y>
+                   <width>251</width>
+                   <height>21</height>
+                  </rect>
                  </property>
-                 <property name="bottomMargin">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <widget class="QTabWidget" name="tab_recepcion">
-                   <property name="currentIndex">
-                    <number>0</number>
-                   </property>
-                   <widget class="QWidget" name="Piso_1">
-                    <attribute name="title">
-                     <string>Tab 1</string>
-                    </attribute>
-                   </widget>
-                   <widget class="QWidget" name="tab_2">
-                    <attribute name="title">
-                     <string>Tab 2</string>
-                    </attribute>
-                   </widget>
-                  </widget>
-                 </item>
-                </layout>
+                </widget>
                </widget>
                <widget class="QWidget" name="page_hab1">
                 <widget class="QFrame" name="frame_9">
