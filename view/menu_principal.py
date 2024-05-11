@@ -60,6 +60,8 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         self.btn_hab.clicked.connect(self.mostrar_pagina_habitacion)
         self.btn_nivel.clicked.connect(self.mostrar_pagina_nivel)
         self.btn_categoria.clicked.connect(self.mostrar_pagina_categoria)
+        self.btn_cliente.clicked.connect(self.mostrar_pagina_huesped)
+
         # -------------------------- Botones Cocina ------------------------------------------
 
         self.btn_listar.clicked.connect(lambda: self.ModeloCocina.listarAlimento(self.tabla_cocina))
@@ -80,7 +82,7 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         self.btn_eliminar_u.clicked.connect(lambda: self.ModeloUsuario.eliminarUsuario(self.tabla_usuario))
         self.btn_actualizar_u.clicked.connect(lambda: self.ModeloUsuario.actualizarUsuario(self.tabla_usuario))
         self.btn_tipoUsuario.clicked.connect(self.mostrar_pagina_tipoUsuario)
-        
+        self.btn_usuario.clicked.connect(lambda: self.ModeloUsuario.listarUsuario(self.tabla_usuario))
         # ----------------------------------- Botones Tipo Usuario ----------------------------
         
         self.btn_volver.clicked.connect(self.mostrar_pagina_usuario)
@@ -106,6 +108,7 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
 
         # --------------------------------------------- Botones de Nivel -----------------------------
         self.btn_crearNiv.clicked.connect(self.pg_CrearNiv)
+        self.btn_crearNiv.clicked.connect(self.agregar_planta)
 
         # ---------------------------------------------- Botones de Categoria -----------------------
         self.btn_crearCat.clicked.connect(self.pg_CrearCat)
@@ -222,7 +225,7 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         self.tab_recepcion.setCurrentIndex(0)
 
     def pg_CrearHospedamiento(self, numero_habitacion):
-        self.crearHabitacionWindow = CrearHospedamiento(numero_habitacion)
+        self.crearHabitacionWindow = CrearHospedamiento(numero_habitacion, self.tab_salida)
         self.crearHabitacionWindow.show()
 
     def obtener_numero_de_niveles_desde_bd(self):
@@ -234,9 +237,6 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
     def cambiar_nombres_de_pestanas_prueba(self):
         # Obtener datos de las habitaciones
         habitaciones = self.ModeloHabitacion.obtenerDatosHabitacionInterfaz()
-
-        # Imprimir los datos de las habitaciones
-        print("Datos de habitaciones:", habitaciones)
 
         # Limpiar pestañas
         self.tab_recepcion.clear()
@@ -306,8 +306,6 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         # Actualizar la interfaz gráfica
         self.tab_recepcion.setCurrentIndex(0)
 
-
-
     # -------------------------------- Metodos de Habitaciones -------------------------------------
     def agregar_planta(self):
         # Determina el nombre de la nueva planta
@@ -329,6 +327,9 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
 
         # Cambia el nombre de la nueva pestaña
         self.tab_recepcion.setTabText(self.tab_recepcion.count() - 1, planta_name)
+
+    def mostrar_pagina_huesped(self):
+        self.stackedWidget.setCurrentWidget(self.page_hab1)
 
     def mostrar_pagina_recepcion(self):
         self.stackedWidget.setCurrentWidget(self.pg_recepcion)

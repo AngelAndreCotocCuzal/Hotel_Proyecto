@@ -43,7 +43,6 @@ class ModeloHabitacion():
 
     def obtenerDatosHabitacionInterfaz(self):
         habitacion = self.modeloHabitacion.obtenerDatosHabitacionInterfaz()
-        print(habitacion)
         return habitacion
 
     def updateEstadoHabitacion(self, estado, idHabitacion):

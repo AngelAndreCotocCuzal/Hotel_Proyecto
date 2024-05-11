@@ -10,8 +10,9 @@ Ui_CrearNivel, _ = loadUiType('view/CrearHospedamiento.ui')
 
 
 class CrearHospedamiento(QMainWindow, Ui_CrearNivel):
-    def __init__(self, numeroH, *args, **kwargs):
+    def __init__(self, numeroH, tabla, *args, **kwargs):
         self.numeroHabitacion = numeroH
+        self.table = tabla
         self.Modelo = ModeloHospedaje()
         self.ModeloHabitacion = ModeloHabitacion()
         super().__init__(*args, **kwargs)
@@ -97,3 +98,5 @@ class CrearHospedamiento(QMainWindow, Ui_CrearNivel):
 
     def close_event(self):
         self.close()
+
+

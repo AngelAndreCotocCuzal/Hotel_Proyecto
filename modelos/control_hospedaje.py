@@ -3,12 +3,16 @@ import sys
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from controladores.hospedaje import RegistrarHospedaje
+from modelos.control_habitacion import ModeloHabitacion
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QPushButton, QVBoxLayout, QWidget
+from modelos.control_nivel import ModeloNivel
 
 
 class ModeloHospedaje:
     def __init__(self) -> None:
+        self.ModeloHabitacion = ModeloHabitacion()
         self.modeloCategoria = RegistrarHospedaje()
+        self.ModeloNivel = ModeloNivel()
 
     def obtenerIdsHabitacionesOcupadas(self):
         habitaciones = self.modeloCategoria.obtenerIdsHabitacionesOcupadas()
@@ -89,5 +93,64 @@ class ModeloHospedaje:
         else:
             # Si el usuario cancela la acción, no hacer nada
             return
+
+
+
+    def actualizar_paneles_y_botones(self, tabla):
+        self.tab_recepcion = tabla
+        # Obtener el número de niveles desde la base de datos
+        numero_de_niveles = self.obtener_numero_de_niveles_desde_bd()
+
+        # Limpiar pestañas
+        self.tab_recepcion.clear()
+
+        # Crear un diccionario para mapear los niveles a las habitaciones correspondientes
+        habitaciones_por_nivel = {}
+
+        # Obtener datos de las habitaciones
+        habitaciones = self.ModeloHabitacion.obtenerDatosHabitacionInterfaz()
+
+        # Obtener la lista de IDs de habitaciones asociadas al cliente
+        lista_ids_habitaciones_cliente = self.habitacionesenuso()
+
+        # Convertir la lista de IDs de habitaciones asociadas al cliente en una lista de números de habitación
+        numeros_habitacion_cliente = [habitacion[1] for habitacion in lista_ids_habitaciones_cliente]
+
+        # Agrupar las habitaciones por nivel
+        for habitacion in habitaciones:
+            nivel = habitacion[3]
+            if nivel not in habitaciones_por_nivel:
+                habitaciones_por_nivel[nivel] = []
+            habitaciones_por_nivel[nivel].append(habitacion)
+
+        # Crear pestañas y botones de habitación para cada nivel
+        for nivel in range(1, numero_de_niveles + 1):
+            # Crear una pestaña para el nivel actual
+            tab = QWidget()
+            layout = QVBoxLayout()
+
+            # Obtener las habitaciones para el nivel actual
+            habitaciones_nivel = habitaciones_por_nivel.get(f"Nivel {nivel}", [])
+
+            # Crear botones de habitación para el nivel actual
+            for habitacion in habitaciones_nivel:
+                estado = habitacion[2]
+                # Verificar si la habitación está asociada al cliente y actualizar el estado
+                if habitacion[0] in [id_habitacion[0] for id_habitacion in
+                                     lista_ids_habitaciones_cliente] and estado == "libre":
+                    estado = "ocupado"  # Cambiar el estado a "ocupado"
+
+                button = QPushButton(f"Habitación {habitacion[0]}\nTipo: {habitacion[1]}\nEstado: {estado}")
+                # Conecta la señal clicked del botón a la función pg_CrearHospedamiento con el número de habitación correspondiente
+                # button.clicked.connect(lambda _, num=habitacion[0]: self.pg_CrearHospedamiento(num))
+                layout.addWidget(button)
+
+
+    def obtener_numero_de_niveles_desde_bd(self):
+        # Suponiendo que hay un método en ModeloNivel que devuelve el número de niveles
+        # Reemplaza 'NoNivele()' con el método real si tiene un nombre diferente
+        numero_niveles = self.ModeloNivel.NoNivele()
+        return numero_niveles
+
 
 

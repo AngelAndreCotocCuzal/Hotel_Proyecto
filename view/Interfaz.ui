@@ -442,7 +442,7 @@ color: rgba(106,105,103,255);
            <string notr="true"/>
           </property>
           <property name="text">
-           <string>Cliente</string>
+           <string>Huesped</string>
           </property>
          </widget>
         </widget>
@@ -616,7 +616,7 @@ color: rgba(106,105,103,255);
                 <string notr="true">background-color: rgba(255,255,255,255);</string>
                </property>
                <property name="currentIndex">
-                <number>0</number>
+                <number>5</number>
                </property>
                <widget class="QWidget" name="pg_recepcion">
                 <widget class="QTabWidget" name="tab_recepcion">
@@ -711,6 +711,69 @@ color: rgba(106,105,103,255);
                  </property>
                 </widget>
                </widget>
+               <widget class="QWidget" name="page">
+                <widget class="QTabWidget" name="tab_salida">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>110</y>
+                   <width>1041</width>
+                   <height>611</height>
+                  </rect>
+                 </property>
+                 <property name="layoutDirection">
+                  <enum>Qt::LeftToRight</enum>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">
+QFrame{
+background-color: rgba(50,66,73,255); /* Cambiar el color de fondo a azul oscuro */
+}
+QPushButton{
+    background:rgba(2,97,98,255);
+    /*border: 1px solid #2361a0; /* Cambiar el color del borde a azul oscuro */
+    border-radius: 10px;
+    font: 75 9pt &quot;MS Shell Dlg 2t&quot;;
+/* Cambiar el color de fondo a azul oscuro */
+    color: white;
+}
+
+QPushButton:hover{
+
+background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(14, 52, 83, 1), stop:1 rgba(14, 52, 83, 1));
+color: rgb(255, 255, 255);
+
+}
+
+QLineEdit{
+background-color: rgb(255,255,255);
+border:none;
+border-bottom:2px solid rgba(46, 82, 101, 200);
+   /*color: #2361a0;*/
+	color:rgba(106,105,103,255);
+
+}
+
+QLabel{
+color: rgba(106,105,103,255);
+}
+</string>
+                 </property>
+                 <property name="currentIndex">
+                  <number>0</number>
+                 </property>
+                 <widget class="QWidget" name="tab_5">
+                  <attribute name="title">
+                   <string>Tab 1</string>
+                  </attribute>
+                 </widget>
+                 <widget class="QWidget" name="tab_6">
+                  <attribute name="title">
+                   <string>Tab 2</string>
+                  </attribute>
+                 </widget>
+                </widget>
+               </widget>
                <widget class="QWidget" name="page_hab1">
                 <widget class="QFrame" name="frame_9">
                  <property name="geometry">
@@ -722,36 +785,57 @@ color: rgba(106,105,103,255);
                   </rect>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">QPushButton{
-    background: white;
-    border: 1px solid #2361a0; /* Cambiar el color del borde a azul oscuro */
+                  <string notr="true">QHeaderView {
+    background-color: white;
+    border: none;
+    font: 75 12pt &quot;Archivo&quot;;
+}
+
+QHeaderView:hover {
+    background-color: white;
+}
+QPushButton{
+    background:rgba(2,97,98,255);
+    /*border: 1px solid #2361a0; /* Cambiar el color del borde a azul oscuro */
     border-radius: 10px;
     font: 75 9pt &quot;MS Shell Dlg 2t&quot;;
 /* Cambiar el color de fondo a azul oscuro */
-    color: #2361a0;
+    color: white;
 }
 
-QPushButton:hover{
+QHeaderView:section {
+    background-color: white;
+    border-bottom: 1px solid lightgray;
+    border-top: none;
+    padding: 2px;
+    font-size: 11pt;
+    color: black;
+text-align: left;
+}
 
-background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(14, 52, 83, 1), stop:1 rgba(14, 52, 83, 1));
-color: rgb(255, 255, 255);
+QTableWidget {
+    background-color: white;
+    border: none;
+    gridline-color: transparent;
+    font-size: 11pt;
+    color: black;
 
 }
-QFrame{
-background-color: rgb(255, 255, 255); /* Cambiar el color de fondo a azul oscuro */
-}
-QLabel{
-    color: #2361a0;
-}
-QLineEdit{
-background-color: rgb(255, 255, 255);
-border:none;
-border-bottom:2px solid rgba(46, 82, 101, 200);
-   /*color: #2361a0;*/
-	color: rgb(25, 68, 112);
 
-padding-bottom:7px;
+QTableWidget QTableCornerButton::section {
+    background-color: white;
+    border: none;
+
 }
+
+QTableWidget::item {
+    border: none;
+    border-bottom: 1px solid lightgray;
+    alignment: AlignHCenter; /* Centra el texto horizontalmente */
+	color:black /* cambiar el color letra al seleccionar*/
+
+}
+
 
 </string>
                  </property>
@@ -907,45 +991,49 @@ padding-bottom:7px;
                   </rect>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">QHeaderView
-{
-Fondo: transparente; 
-background-color: #0e3453; /* Color de la barra superior de la derecha*/
-border-top-left-radius:20p;
- /* Color de letra de la parte superior*/
-	color: rgb(255, 255, 255);
-font: 77 10pt &quot;Gadugi&quot;;
+                  <string notr="true">QHeaderView {
+    background-color: white;
+    border: none;
+    font: 75 12pt &quot;Archivo&quot;;
 }
 
-QHeaderView:hover
-{
-background-color: rgb(225, 225, 225); /* ni iedea que cambia */
-border-top-left-radius:20p;
+QHeaderView:hover {
+    background-color: white;
 }
-QHeaderView:section
-{
-background-color: #0e3453; /*Para cambiar el color de la barra superior*/
-border-top-left-radius:20p;
-padding: 2px;
-font-size:11 pt;
+
+QHeaderView:section {
+    background-color: white;
+    border-bottom: 1px solid lightgray;
+    border-top: none;
+    padding: 2px;
+    font-size: 11pt;
+    color: black;
+text-align: left;
+}
+
+QTableWidget {
+    background-color: white;
+    border: none;
+    gridline-color: transparent;
+    font-size: 11pt;
+    color: black;
 
 }
-QTableWidget{
-background-color: rgb(255, 255, 255); /*Cambiar el color de la mera tabla*/
-gridline-color: rgb(24, 30, 50); /* Cambia el color del borde al seleccionar una selda de la tabla*/
-font-size: 11pt;
-border-top-left-radius:20p;
-color: rgb(0,126,249); /* Color de la letra en la tabla */ 
-font: 77 10pt &quot;Gadugi&quot;;
+
+QTableWidget QTableCornerButton::section {
+    background-color: white;
+    border: none;
+
 }
-QTableWidgetQTableCornerButton::section{
-background-color: rgb(225, 225, 225); /* ni idea que hace*/
-border: 1px solid rgb(0,126,249);
+
+QTableWidget::item {
+    border: none;
+    border-bottom: 1px solid lightgray;
+    alignment: AlignHCenter; /* Centra el texto horizontalmente */
+	color:black /* cambiar el color letra al seleccionar*/
+
 }
-QTableView QTableCornerButton::section {
-background-color: rgb(225, 225, 225); /* Cambia el color del boton de la izquierda superior*/ 
-/*border: 1px solid rgb(0, 126, 249);*/
-}</string>
+</string>
                  </property>
                  <attribute name="horizontalHeaderDefaultSectionSize">
                   <number>110</number>
@@ -1008,27 +1096,55 @@ background-color: rgb(225, 225, 225); /* Cambia el color del boton de la izquier
                     </size>
                    </property>
                    <property name="styleSheet">
-                    <string notr="true">QPushButton{
-background-color: rgb(24, 30, 50);
-border-top-left-radius:20p;
-color: rgb(0,126,249);
-font: 77 10pt &quot;Gadugi&quot;;
+                    <string notr="true">QHeaderView {
+    background-color: white;
+    border: none;
+    font: 75 12pt &quot;Archivo&quot;;
+}
 
-border-radius: 5px;
+QHeaderView:hover {
+    background-color: white;
+}
+QPushButton{
+    background:rgba(2,97,98,255);
+    /*border: 1px solid #2361a0; /* Cambiar el color del borde a azul oscuro */
+    border-radius: 10px;
+    font: 75 9pt &quot;MS Shell Dlg 2t&quot;;
+/* Cambiar el color de fondo a azul oscuro */
+    color: white;
+}
+
+QHeaderView:section {
+    background-color: white;
+    border-bottom: 1px solid lightgray;
+    border-top: none;
+    padding: 2px;
+    font-size: 11pt;
+    color: black;
+text-align: left;
+}
+
+QTableWidget {
+    background-color: white;
+    border: none;
+    gridline-color: transparent;
+    font-size: 11pt;
+    color: black;
 
 }
 
-QPushButton:hover{
-
-background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(11, 131, 120, 219), stop:1 rgba(85, 98, 112, 226));
-
+QTableWidget QTableCornerButton::section {
+    background-color: white;
+    border: none;
 
 }
-QFrame{
-background-color: rgb(24, 30, 50);
-}
-QLabel{
-color: rgb(0,126,249);
+
+QTableWidget::item {
+    border: none;
+    border-bottom: 1px solid lightgray;
+    alignment: AlignHCenter; /* Centra el texto horizontalmente */
+	color:black /* cambiar el color letra al seleccionar*/
+
 }</string>
                    </property>
                    <property name="frameShape">
@@ -1215,43 +1331,47 @@ border: 1px solid rgb(0, 126, 249);
                     <item>
                      <widget class="QTableWidget" name="tabla_cocina">
                       <property name="styleSheet">
-                       <string notr="true">QHeaderView
-{
-Fondo: transparente; 
-background-color: rgb(24, 30, 50);
-border-top-left-radius:20p;
-color: rgb(0,126,249);
-font: 77 10pt &quot;Gadugi&quot;;
+                       <string notr="true">QHeaderView {
+    background-color: white;
+    border: none;
+    font: 75 12pt &quot;Archivo&quot;;
 }
 
-QHeaderView:hover
-{
-background-color: rgb(46, 51, 84);
-border-top-left-radius:20p;
+QHeaderView:hover {
+    background-color: white;
 }
-QHeaderView:section
-{
-background-color: rgb(46, 51, 84);
-border-top-left-radius:20p;
-padding: 2px;
-font-size:11 pt;
+
+QHeaderView:section {
+    background-color: white;
+    border-bottom: 1px solid lightgray;
+    border-top: none;
+    padding: 2px;
+    font-size: 11pt;
+    color: black;
+text-align: left;
+}
+
+QTableWidget {
+    background-color: white;
+    border: none;
+    gridline-color: transparent;
+    font-size: 11pt;
+    color: black;
 
 }
-QTableWidget{
-background-color: rgb(24, 30, 50);
-gridline-color: rgb(24, 30, 50);
-font-size: 11pt;
-border-top-left-radius:20p;
-color: rgb(0,126,249);
-font: 77 10pt &quot;Gadugi&quot;;
+
+QTableWidget QTableCornerButton::section {
+    background-color: white;
+    border: none;
+
 }
-QTableWidgetQTableCornerButton::section{
-background-color: rgb(46, 51, 84);
-border: 1px solid rgb(0,126,249);
-}
-QTableView QTableCornerButton::section {
-background-color: rgb(46, 51, 84);
-border: 1px solid rgb(0, 126, 249);
+
+QTableWidget::item {
+    border: none;
+    border-bottom: 1px solid lightgray;
+    alignment: AlignHCenter; /* Centra el texto horizontalmente */
+	color:black /* cambiar el color letra al seleccionar*/
+
 }</string>
                       </property>
                       <property name="autoScrollMargin">
@@ -1313,34 +1433,55 @@ border: 1px solid rgb(0, 126, 249);
                   </rect>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">QLineEdit{
-background-color:rgba(0, 0, 0, 0);
-border:none;
-border-bottom:2px solid rgba(46, 82, 101, 200);
-color: rgb(0,126,249);
-padding-bottom:7px;
+                  <string notr="true">QHeaderView {
+    background-color: white;
+    border: none;
+    font: 75 12pt &quot;Archivo&quot;;
+}
+
+QHeaderView:hover {
+    background-color: white;
 }
 QPushButton{
-background-color: rgb(24, 30, 50);
-border-top-left-radius:20p;
-color: rgb(0,126,249);
-font: 77 10pt &quot;Gadugi&quot;;
+    background:rgba(2,97,98,255);
+    /*border: 1px solid #2361a0; /* Cambiar el color del borde a azul oscuro */
+    border-radius: 10px;
+    font: 75 9pt &quot;MS Shell Dlg 2t&quot;;
+/* Cambiar el color de fondo a azul oscuro */
+    color: white;
+}
 
-border-radius: 5px;
+QHeaderView:section {
+    background-color: white;
+    border-bottom: 1px solid lightgray;
+    border-top: none;
+    padding: 2px;
+    font-size: 11pt;
+    color: black;
+text-align: left;
+}
+
+QTableWidget {
+    background-color: white;
+    border: none;
+    gridline-color: transparent;
+    font-size: 11pt;
+    color: black;
 
 }
 
-QPushButton:hover{
-
-background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(11, 131, 120, 219), stop:1 rgba(85, 98, 112, 226));
-
+QTableWidget QTableCornerButton::section {
+    background-color: white;
+    border: none;
 
 }
-QFrame{
-background-color: rgb(24, 30, 50);
-}
-QLabel{
-color: rgb(0,126,249);
+
+QTableWidget::item {
+    border: none;
+    border-bottom: 1px solid lightgray;
+    alignment: AlignHCenter; /* Centra el texto horizontalmente */
+	color:black /* cambiar el color letra al seleccionar*/
+
 }
 </string>
                  </property>
@@ -1513,43 +1654,47 @@ font: 75 12pt&quot;Times New Roman&quot;;</string>
                   </rect>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">QHeaderView
-{
-Fondo: transparente; 
-background-color: rgb(24, 30, 50);
-border-top-left-radius:20p;
-color: rgb(0,126,249);
-font: 77 10pt &quot;Gadugi&quot;;
+                  <string notr="true">QHeaderView {
+    background-color: white;
+    border: none;
+    font: 75 12pt &quot;Archivo&quot;;
 }
 
-QHeaderView:hover
-{
-background-color: rgb(46, 51, 84);
-border-top-left-radius:20p;
+QHeaderView:hover {
+    background-color: white;
 }
-QHeaderView:section
-{
-background-color: rgb(46, 51, 84);
-border-top-left-radius:20p;
-padding: 2px;
-font-size:11 pt;
+
+QHeaderView:section {
+    background-color: white;
+    border-bottom: 1px solid lightgray;
+    border-top: none;
+    padding: 2px;
+    font-size: 11pt;
+    color: black;
+text-align: left;
+}
+
+QTableWidget {
+    background-color: white;
+    border: none;
+    gridline-color: transparent;
+    font-size: 11pt;
+    color: black;
 
 }
-QTableWidget{
-background-color: rgb(24, 30, 50);
-gridline-color: rgb(24, 30, 50);
-font-size: 11pt;
-border-top-left-radius:20p;
-color: rgb(0,126,249);
-font: 77 10pt &quot;Gadugi&quot;;
+
+QTableWidget QTableCornerButton::section {
+    background-color: white;
+    border: none;
+
 }
-QTableWidgetQTableCornerButton::section{
-background-color: rgb(46, 51, 84);
-border: 1px solid rgb(0,126,249);
-}
-QTableView QTableCornerButton::section {
-background-color: rgb(46, 51, 84);
-border: 1px solid rgb(0, 126, 249);
+
+QTableWidget::item {
+    border: none;
+    border-bottom: 1px solid lightgray;
+    alignment: AlignHCenter; /* Centra el texto horizontalmente */
+	color:black /* cambiar el color letra al seleccionar*/
+
 }</string>
                  </property>
                  <attribute name="horizontalHeaderDefaultSectionSize">
@@ -1622,36 +1767,56 @@ border: 1px solid rgb(0, 126, 249);
                   </rect>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">QLineEdit{
-background-color:rgba(0, 0, 0, 0);
-border:none;
-border-bottom:2px solid rgba(46, 82, 101, 200);
-color: rgb(0,126,249);
-padding-bottom:7px;
+                  <string notr="true">QHeaderView {
+    background-color: white;
+    border: none;
+    font: 75 12pt &quot;Archivo&quot;;
+}
+
+QHeaderView:hover {
+    background-color: white;
 }
 QPushButton{
-background-color: rgb(24, 30, 50);
-border-top-left-radius:20p;
-color: rgb(0,126,249);
-font: 77 10pt &quot;Gadugi&quot;;
+    background:rgba(2,97,98,255);
+    /*border: 1px solid #2361a0; /* Cambiar el color del borde a azul oscuro */
+    border-radius: 10px;
+    font: 75 9pt &quot;MS Shell Dlg 2t&quot;;
+/* Cambiar el color de fondo a azul oscuro */
+    color: white;
+}
 
-border-radius: 5px;
+QHeaderView:section {
+    background-color: white;
+    border-bottom: 1px solid lightgray;
+    border-top: none;
+    padding: 2px;
+    font-size: 11pt;
+    color: black;
+text-align: left;
+}
+
+QTableWidget {
+    background-color: white;
+    border: none;
+    gridline-color: transparent;
+    font-size: 11pt;
+    color: black;
 
 }
 
-QPushButton:hover{
-
-background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(11, 131, 120, 219), stop:1 rgba(85, 98, 112, 226));
-
+QTableWidget QTableCornerButton::section {
+    background-color: white;
+    border: none;
 
 }
-QFrame{
-background-color: rgb(24, 30, 50);
-}
-QLabel{
-color: rgb(0,126,249);
-}
-</string>
+
+QTableWidget::item {
+    border: none;
+    border-bottom: 1px solid lightgray;
+    alignment: AlignHCenter; /* Centra el texto horizontalmente */
+	color:black /* cambiar el color letra al seleccionar*/
+
+}</string>
                  </property>
                  <property name="frameShape">
                   <enum>QFrame::StyledPanel</enum>
@@ -1769,43 +1934,47 @@ color: rgb(0,126,249);
                   </rect>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">QHeaderView
-{
-Fondo: transparente; 
-background-color: rgb(24, 30, 50);
-border-top-left-radius:20p;
-color: rgb(0,126,249);
-font: 77 10pt &quot;Gadugi&quot;;
+                  <string notr="true">QHeaderView {
+    background-color: white;
+    border: none;
+    font: 75 12pt &quot;Archivo&quot;;
 }
 
-QHeaderView:hover
-{
-background-color: rgb(46, 51, 84);
-border-top-left-radius:20p;
+QHeaderView:hover {
+    background-color: white;
 }
-QHeaderView:section
-{
-background-color: rgb(46, 51, 84);
-border-top-left-radius:20p;
-padding: 2px;
-font-size:11 pt;
+
+QHeaderView:section {
+    background-color: white;
+    border-bottom: 1px solid lightgray;
+    border-top: none;
+    padding: 2px;
+    font-size: 11pt;
+    color: black;
+text-align: left;
+}
+
+QTableWidget {
+    background-color: white;
+    border: none;
+    gridline-color: transparent;
+    font-size: 11pt;
+    color: black;
 
 }
-QTableWidget{
-background-color: rgb(24, 30, 50);
-gridline-color: rgb(24, 30, 50);
-font-size: 11pt;
-border-top-left-radius:20p;
-color: rgb(0,126,249);
-font: 77 10pt &quot;Gadugi&quot;;
+
+QTableWidget QTableCornerButton::section {
+    background-color: white;
+    border: none;
+
 }
-QTableWidgetQTableCornerButton::section{
-background-color: rgb(46, 51, 84);
-border: 1px solid rgb(0,126,249);
-}
-QTableView QTableCornerButton::section {
-background-color: rgb(46, 51, 84);
-border: 1px solid rgb(0, 126, 249);
+
+QTableWidget::item {
+    border: none;
+    border-bottom: 1px solid lightgray;
+    alignment: AlignHCenter; /* Centra el texto horizontalmente */
+	color:black /* cambiar el color letra al seleccionar*/
+
 }</string>
                  </property>
                  <attribute name="horizontalHeaderDefaultSectionSize">
