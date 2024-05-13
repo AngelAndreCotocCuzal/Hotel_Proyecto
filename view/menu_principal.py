@@ -47,8 +47,8 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
 
         # ---------Estos botones son para asignar el nombre a los niveles y saber cuantos
         #  hay para colocar ese numero de pestañas-----------------------------
-        self.actualizar_paneles_y_botones()
-        self.btn_habitacion.clicked.connect(self.actualizar_paneles_y_botones)
+        self.actualizar_paneles_y_botones(self.tablaNivel)
+        self.btn_habitacion.clicked.connect(lambda: self.actualizar_paneles_y_botones(self.tablaNivel))
         self.btn_actualizarH_2.clicked.connect(self.actualizarBotonesHabitacion)
 
         
@@ -169,9 +169,9 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
             if widget is not None:
                 widget.deleteLater()
 
-    def actualizar_paneles_y_botones(self):
+    def actualizar_paneles_y_botones(self, tabla):
         # Obtener el número de niveles desde la base de datos
-        numero_de_niveles = self.obtener_numero_de_niveles_desde_bd()
+        numero_de_niveles = self.obtener_numero_de_niveles_desde_bd(tabla)
 
         # Limpiar pestañas
         self.tab_recepcion.clear()
@@ -228,38 +228,11 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         self.crearHabitacionWindow = CrearHospedamiento(numero_habitacion, self.tab_salida)
         self.crearHabitacionWindow.show()
 
-    def obtener_numero_de_niveles_desde_bd(self):
+    def obtener_numero_de_niveles_desde_bd(self, tabla):
         # Suponiendo que hay un método en ModeloNivel que devuelve el número de niveles
         # Reemplaza 'NoNivele()' con el método real si tiene un nombre diferente
-        numero_niveles = self.ModeloNivel.NoNivele()
+        numero_niveles = self.ModeloNivel.NoNivele(tabla)
         return numero_niveles
-
-    def cambiar_nombres_de_pestanas_prueba(self):
-        # Obtener datos de las habitaciones
-        habitaciones = self.ModeloHabitacion.obtenerDatosHabitacionInterfaz()
-
-        # Limpiar pestañas
-        self.tab_recepcion.clear()
-
-        # Crear pestañas y botones de habitación para cada nivel
-        for nivel in set(habitacion[3] for habitacion in habitaciones):
-            # Crear una pestaña para el nivel actual
-            tab = QWidget()
-            layout = QVBoxLayout()
-
-            # Obtener las habitaciones para el nivel actual
-            habitaciones_nivel = [habitacion for habitacion in habitaciones if habitacion[3] == nivel]
-
-            # Crear botones de habitación para el nivel actual
-            widget = self.crear_botones_habitacion(habitaciones_nivel, nivel)
-
-            # Agregar el widget de botones al diseño de la pestaña
-            layout.addWidget(widget)
-
-            # Establecer el diseño en la pestaña y agregarla al QTabWidget
-            tab.setLayout(layout)
-            self.tab_recepcion.addTab(tab, nivel)
-
 
     def pg_CrearHabitacion(self):
         self.crearHabitacionWindow = CrearHabitacion(self.tablaHabitacion)
@@ -274,37 +247,6 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         # Instanciar y mostrar la ventana CrearNivel, pasando self como el padre
         self.crear_nivel_window = CrearNivel(self.tablaNivel)
         self.crear_nivel_window.show()
-
-
-        # self.crear_nivel_window.finished.connect(self.enable_main_window)
-
-    # Codigo de pestañas
-
-    def cambiar_nombres_de_pestanas(self):
-        # Obtener el número de niveles desde la base de datos
-        numero_de_niveles_desde_bd = self.obtener_numero_de_niveles_desde_bd()
-
-        # Obtener el número actual de pestañas
-        numero_de_pestanas_actuales = self.tab_recepcion.count()
-
-        # Si hay más niveles en la BD que las actuales, agregamos pestañas adicionales
-        if numero_de_niveles_desde_bd > numero_de_pestanas_actuales:
-            for i in range(numero_de_pestanas_actuales, numero_de_niveles_desde_bd):
-                # Agregar una nueva pestaña
-                nueva_pestana = QWidget()
-                self.tab_recepcion.addTab(nueva_pestana, f"Nivel {i + 1}")
-
-        # Si hay menos niveles en la BD que las actuales, eliminamos pestañas
-        elif numero_de_niveles_desde_bd < numero_de_pestanas_actuales:
-            for i in range(numero_de_pestanas_actuales - 1, numero_de_niveles_desde_bd - 1, -1):
-                self.tab_recepcion.removeTab(i)
-
-        # Cambiar los nombres de las pestañas
-        for i in range(numero_de_niveles_desde_bd):
-            self.tab_recepcion.setTabText(i, f"Nivel {i + 1}")
-
-        # Actualizar la interfaz gráfica
-        self.tab_recepcion.setCurrentIndex(0)
 
     # -------------------------------- Metodos de Habitaciones -------------------------------------
     def agregar_planta(self):

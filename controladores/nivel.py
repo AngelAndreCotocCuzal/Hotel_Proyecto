@@ -76,6 +76,12 @@ class RegistrarNivel:
         count = cursor.fetchone()[0]
         return count
 
+    def updatepisonivel(self, nombre, nivel, id):
+        with self.conn.cursor() as cursor:
+            sql = """UPDATE nivelhabitacion SET Nombre = %s, Nivel = %s WHERE idNivelHabitacion = %s"""
+            cursor.execute(sql, (nombre, nivel, id))
+            self.conn.commit()
+
     def eliminarNivel(self, id):
         with self.conn.cursor() as cursor:
             sql = "DELETE FROM nivelhabitacion WHERE idNivelHabitacion = '" + str(id) + "'"
@@ -89,3 +95,18 @@ class RegistrarNivel:
 
             cursor.execute(sql, (nombre, nivel, id))
             self.conn.commit()
+
+    def todoslosid_nivel(self):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT idNivelHabitacion FROM nivelhabitacion")
+        result = cursor.fetchall()
+        # Extraer los identificadores de las tuplas y guardarlos en una lista
+        ids = [row[0] for row in result]
+        return ids
+
+    def actualizar_datos_automaticamente(self):
+        while True:
+            # Actualizar los datos llamando a la función todoslosid_nivel()
+            ids = self.todoslosid_nivel()
+            return ids
+

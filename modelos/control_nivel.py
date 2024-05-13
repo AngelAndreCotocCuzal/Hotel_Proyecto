@@ -9,32 +9,36 @@ class ModeloNivel:
         self.modeloNivel = RegistrarNivel()
 
     def listarNivel(self, tabla):
-
-        # **************** Este Codigo omite la primera columna que le envien **************************
-        table = tabla
+        # Obtener datos de la base de datos
         cocina = self.modeloNivel.obtenerNivel()
-        table.setRowCount(0)
 
-        ids = [row[0] for row in cocina]
+        # Establecer el número de filas en la tabla
+        tabla.setRowCount(len(cocina))
 
-
+        # Insertar los datos en la tabla
         for row_number, row_data in enumerate(cocina):
-            table.insertRow(row_number)
-            for column_number, data in enumerate(
-                    row_data[1:]):  # Empezar desde el segundo elemento para omitir la primera columna
-                table.setItem(row_number, column_number, QtWidgets.QTableWidgetItem(str(data)))
+            # Insertar datos en todas las columnas, incluida la primera columna
+            for column_number, data in enumerate(row_data):
+                item = QtWidgets.QTableWidgetItem(str(data))
+                tabla.setItem(row_number, column_number, item)
 
+            # Hacer la primera columna invisible
+            tabla.setColumnHidden(0, True)
+
+            # Crear botones de editar y eliminar
             buttonEditar = QPushButton("Editar")
-            buttonEditar.clicked.connect(lambda _, row=row_number: self.subirNivel(table, row, ids[row]))
+            buttonEditar.clicked.connect(lambda _, row=row_number: self.subirNivel(tabla, row, row_data[
+                0]))  # Pasar el id de la fila como argumento
             buttonEditar.setStyleSheet("background-color: rgba(229,170,39,255);"
                                        " color: rgba(255,255,255,255); font: 75 12pt 'Archivo';")
-            table.setCellWidget(row_number, 2, buttonEditar)  # Ajustar el índice para el botón editar
+            tabla.setCellWidget(row_number, 2, buttonEditar)  # Ajustar el índice para el botón editar
 
             buttonEliminar = QPushButton("Eliminar")
-            buttonEliminar.clicked.connect(lambda _, row=row_number: self.delete_row(row, table, ids[row]))
+            buttonEliminar.clicked.connect(lambda _, row=row_number: self.delete_row(row, tabla, row_data[
+                0]))  # Pasar el id de la fila como argumento
             buttonEliminar.setStyleSheet("background-color: rgba(247,67,56,255);"
                                          " color: rgba(255,255,255,255); font: 75 12pt 'Archivo';")
-            table.setCellWidget(row_number, 3, buttonEliminar)
+            tabla.setCellWidget(row_number, 3, buttonEliminar)
 
     def subirNivel(self, tabla, row, id_nivel):
 
@@ -73,7 +77,27 @@ class ModeloNivel:
             return
 
     # *** Este metodo es para optener cuantos niveles hay esto para la seccion de chekout *****
-    def NoNivele(self):
+    def NoNivele(self, tabla):
+        # ids = self.modeloNivel.actualizar_datos_automaticamente()
+        table = tabla
+        products = []
+        fila = []
+        for row_number in range(table.rowCount()):
+            for column_number in range(table.columnCount()):
+                if table.item(row_number, column_number) != None:
+                    fila.append(table.item(row_number, column_number).text())
+            if len(fila) > 0:
+                products.append(fila)
+            fila = []
+
+        print(products)
+
+        if len(products) > 0:
+            for prod in products:
+                self.modeloNivel.updatepisonivel(prod[2], prod[1], prod[0])
+
+        self.listarNivel(tabla)
+
         numeroH = self.modeloNivel.obtener_idPisoHabitacionpornivel()
         return numeroH
 
