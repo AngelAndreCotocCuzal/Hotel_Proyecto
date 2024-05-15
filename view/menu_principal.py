@@ -8,6 +8,7 @@ from view.CrearNivel import CrearNivel
 from view.CrearCategoria import CrearCategoria
 from view.Crearhabitacion import CrearHabitacion
 from view.crearHospedamiento import CrearHospedamiento
+from view.CrearSalida import CrearSalida
 from modelos.control_cocina import ModeloCocina
 from modelos.control_usuario import ModeloUsuario
 from modelos.control_TipoUsuario import ModeloTipoUsuario
@@ -16,6 +17,7 @@ from modelos.control_habitacion import ModeloHabitacion
 from modelos.control_nivel import ModeloNivel
 from modelos.control_Categoria import ModeloCategoria
 from modelos.control_hospedaje import ModeloHospedaje
+from modelos.control_Salida import ModeloRegistro
 import bcrypt
 import functools
 
@@ -32,13 +34,13 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         self.ModeloNivel = ModeloNivel()
         self.ModeloCategoria = ModeloCategoria()
         self.ModeloHospedaje = ModeloHospedaje()
+        self.ModeloRegistro = ModeloRegistro()
 
         # self.model = Modelo_pro()
         super().__init__()
         self.setupUi(self)
         self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-
 
         # Listar todas las tablas
         self.ModeloNivel.listarNivel(self.tablaNivel)
@@ -49,9 +51,10 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         #  hay para colocar ese numero de pestañas-----------------------------
         self.actualizar_paneles_y_botones(self.tablaNivel)
         self.btn_habitacion.clicked.connect(lambda: self.actualizar_paneles_y_botones(self.tablaNivel))
+        self.actualizar_paneles_y_botonesParaSalida(self.tablaNivel)
+        self.btn_salida.clicked.connect(lambda: self.actualizar_paneles_y_botonesParaSalida(self.tablaNivel))
         self.btn_actualizarH_2.clicked.connect(self.actualizarBotonesHabitacion)
 
-        
         # -------------------------- Conectar Botones con Pagina  ---------------------------
         self.btn_habitacion.clicked.connect(self.mostrar_pagina_recepcion)
         self.btn_cocina.clicked.connect(self.mostrar_pagina_cocina)
@@ -61,6 +64,7 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         self.btn_nivel.clicked.connect(self.mostrar_pagina_nivel)
         self.btn_categoria.clicked.connect(self.mostrar_pagina_categoria)
         self.btn_cliente.clicked.connect(self.mostrar_pagina_huesped)
+        self.btn_salida.clicked.connect(self.mostrar_pagina_salida)
 
         # -------------------------- Botones Cocina ------------------------------------------
 
@@ -72,8 +76,6 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
                                                                                         self.lnl_vencimiento.text(), 
                                                                                         self.tabla_cocina))
 
-
-
         # --------------------------------- Botones Usuario ----------------------------------
 
         self.btn_register_6.clicked.connect(self.registrar)
@@ -83,6 +85,7 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         self.btn_actualizar_u.clicked.connect(lambda: self.ModeloUsuario.actualizarUsuario(self.tabla_usuario))
         self.btn_tipoUsuario.clicked.connect(self.mostrar_pagina_tipoUsuario)
         self.btn_usuario.clicked.connect(lambda: self.ModeloUsuario.listarUsuario(self.tabla_usuario))
+
         # ----------------------------------- Botones Tipo Usuario ----------------------------
         
         self.btn_volver.clicked.connect(self.mostrar_pagina_usuario)
@@ -116,6 +119,8 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         # ------------------------------------------- Botones de habitacion -------------------------
         self.btn_crearHab.clicked.connect(self.pg_CrearHabitacion)
 
+        # ----------------------------------------- Botones de Registro -----------------------------
+        self.btn_registro.clicked.connect(lambda: self.ModeloRegistro.listarRegistro(self.tab_Reporte))
 
     # Dentro del método cambiar_nombres_de_pestanas():
 
@@ -180,13 +185,8 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         habitaciones_por_nivel = {}
 
         # Obtener datos de las habitaciones
+        self.ModeloHabitacion.updatehabitacion(self.tablaHabitacion)
         habitaciones = self.ModeloHabitacion.obtenerDatosHabitacionInterfaz()
-
-        # Obtener la lista de IDs de habitaciones asociadas al cliente
-        lista_ids_habitaciones_cliente = self.ModeloHospedaje.habitacionesenuso()
-
-        # Convertir la lista de IDs de habitaciones asociadas al cliente en una lista de números de habitación
-        numeros_habitacion_cliente = [habitacion[1] for habitacion in lista_ids_habitaciones_cliente]
 
         # Agrupar las habitaciones por nivel
         for habitacion in habitaciones:
@@ -208,13 +208,13 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
             for habitacion in habitaciones_nivel:
                 estado = habitacion[2]
                 # Verificar si la habitación está asociada al cliente y actualizar el estado
-                if habitacion[0] in [id_habitacion[0] for id_habitacion in
-                                     lista_ids_habitaciones_cliente] and estado == "libre":
-                    estado = "ocupado"  # Cambiar el estado a "ocupado"
 
                 button = QPushButton(f"Habitación {habitacion[0]}\nTipo: {habitacion[1]}\nEstado: {estado}")
+                if estado == "Ocupado":
+                    button.setEnabled(False)
+                else:
                 # Conecta la señal clicked del botón a la función pg_CrearHospedamiento con el número de habitación correspondiente
-                button.clicked.connect(lambda _, num=habitacion[0]: self.pg_CrearHospedamiento(num))
+                    button.clicked.connect(lambda _, num=habitacion[0]: self.pg_CrearHospedamiento(num))
                 layout.addWidget(button)
 
             # Establecer el diseño en la pestaña y agregarla al QTabWidget
@@ -224,15 +224,66 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         # Actualizar la interfaz gráfica
         self.tab_recepcion.setCurrentIndex(0)
 
-    def pg_CrearHospedamiento(self, numero_habitacion):
-        self.crearHabitacionWindow = CrearHospedamiento(numero_habitacion, self.tab_salida)
-        self.crearHabitacionWindow.show()
+    def actualizar_paneles_y_botonesParaSalida(self, tabla):
+        # Obtener el número de niveles desde la base de datos
+        numero_de_niveles = self.obtener_numero_de_niveles_desde_bd(tabla)
+
+        # Limpiar pestañas
+        self.tab_salida.clear()
+
+        # Crear un diccionario para mapear los niveles a las habitaciones correspondientes
+        habitaciones_por_nivel = {}
+
+        # Obtener datos de las habitaciones
+        self.ModeloHabitacion.updatehabitacion(self.tablaHabitacion)
+        habitaciones = self.ModeloHabitacion.obtenerDatosHabitacionInterfazSalida()
+
+        # Agrupar las habitaciones por nivel
+        for habitacion in habitaciones:
+            nivel = habitacion[3]
+            if nivel not in habitaciones_por_nivel:
+                habitaciones_por_nivel[nivel] = []
+            habitaciones_por_nivel[nivel].append(habitacion)
+
+        # Crear pestañas y botones de habitación para cada nivel
+        for nivel in range(1, numero_de_niveles + 1):
+            # Crear una pestaña para el nivel actual
+            tab = QWidget()
+            layout = QVBoxLayout()
+
+            # Obtener las habitaciones para el nivel actual
+            habitaciones_nivel = habitaciones_por_nivel.get(f"Nivel {nivel}", [])
+
+            # Crear botones de habitación para el nivel actual
+            for habitacion in habitaciones_nivel:
+                estado = habitacion[2]
+                # Verificar si la habitación está asociada al cliente y actualizar el estado
+
+                button = QPushButton(f"Habitación {habitacion[0]}\nTipo: {habitacion[1]}\nEstado: {estado}")
+
+            # Conecta la señal clicked del botón a la función pg_CrearHospedamiento con el número de habitación correspondiente
+                button.clicked.connect(lambda _, num=habitacion[0]: self.pg_CrearSalida())
+                layout.addWidget(button)
+
+            # Establecer el diseño en la pestaña y agregarla al QTabWidget
+            tab.setLayout(layout)
+            self.tab_salida.addTab(tab, f"Nivel {nivel}")
+
+        # Actualizar la interfaz gráfica
+        self.tab_recepcion.setCurrentIndex(0)
 
     def obtener_numero_de_niveles_desde_bd(self, tabla):
-        # Suponiendo que hay un método en ModeloNivel que devuelve el número de niveles
-        # Reemplaza 'NoNivele()' con el método real si tiene un nombre diferente
-        numero_niveles = self.ModeloNivel.NoNivele(tabla)
+        self.ModeloNivel.updateNivel(tabla)
+        numero_niveles = self.ModeloNivel.numeroNivel()
         return numero_niveles
+
+    def pg_CrearSalida(self):
+        self.crearHabitacionWindow = CrearSalida(self.tab_Reporte)
+        self.crearHabitacionWindow.show()
+
+    def pg_CrearHospedamiento(self, numero_habitacion):
+        self.crearHabitacionWindow = CrearHospedamiento(numero_habitacion, self.tab_salida, self.tablaHabitacion)
+        self.crearHabitacionWindow.show()
 
     def pg_CrearHabitacion(self):
         self.crearHabitacionWindow = CrearHabitacion(self.tablaHabitacion)
@@ -270,6 +321,8 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         # Cambia el nombre de la nueva pestaña
         self.tab_recepcion.setTabText(self.tab_recepcion.count() - 1, planta_name)
 
+    def mostrar_pagina_salida(self):
+        self.stackedWidget.setCurrentWidget(self.pageSalida)
     def mostrar_pagina_huesped(self):
         self.stackedWidget.setCurrentWidget(self.page_hab1)
 

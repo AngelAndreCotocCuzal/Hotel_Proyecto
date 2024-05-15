@@ -31,14 +31,14 @@ class ModeloNivel:
                 0]))  # Pasar el id de la fila como argumento
             buttonEditar.setStyleSheet("background-color: rgba(229,170,39,255);"
                                        " color: rgba(255,255,255,255); font: 75 12pt 'Archivo';")
-            tabla.setCellWidget(row_number, 2, buttonEditar)  # Ajustar el índice para el botón editar
+            tabla.setCellWidget(row_number, 3, buttonEditar)  # Ajustar el índice para el botón editar
 
             buttonEliminar = QPushButton("Eliminar")
             buttonEliminar.clicked.connect(lambda _, row=row_number: self.delete_row(row, tabla, row_data[
                 0]))  # Pasar el id de la fila como argumento
             buttonEliminar.setStyleSheet("background-color: rgba(247,67,56,255);"
                                          " color: rgba(255,255,255,255); font: 75 12pt 'Archivo';")
-            tabla.setCellWidget(row_number, 3, buttonEliminar)
+            tabla.setCellWidget(row_number, 4, buttonEliminar)
 
     def subirNivel(self, tabla, row, id_nivel):
 
@@ -71,13 +71,13 @@ class ModeloNivel:
             else:
                 # Si hay habitaciones asociadas, mostrar un mensaje de error y no permitir la eliminación
                 QMessageBox.critical(None, "Error",
-                                     "No se puede eliminar esta categoría porque hay habitaciones asociadas.")
+                                     "No se puede eliminar este nivel porque hay habitaciones asociadas.")
         else:
             # Si el usuario cancela la acción, no hacer nada
             return
 
     # *** Este metodo es para optener cuantos niveles hay esto para la seccion de chekout *****
-    def NoNivele(self, tabla):
+    def updateNivel(self, tabla):
         # ids = self.modeloNivel.actualizar_datos_automaticamente()
         table = tabla
         products = []
@@ -90,14 +90,13 @@ class ModeloNivel:
                 products.append(fila)
             fila = []
 
-        print(products)
-
         if len(products) > 0:
             for prod in products:
                 self.modeloNivel.updatepisonivel(prod[2], prod[1], prod[0])
 
         self.listarNivel(tabla)
 
+    def numeroNivel(self):
         numeroH = self.modeloNivel.obtener_idPisoHabitacionpornivel()
         return numeroH
 

@@ -10,9 +10,10 @@ Ui_CrearNivel, _ = loadUiType('view/CrearHospedamiento.ui')
 
 
 class CrearHospedamiento(QMainWindow, Ui_CrearNivel):
-    def __init__(self, numeroH, tabla, *args, **kwargs):
+    def __init__(self, numeroH, tabla, tablaDatos,*args, **kwargs):
         self.numeroHabitacion = numeroH
         self.table = tabla
+        self.tablaDatos = tablaDatos
         self.Modelo = ModeloHospedaje()
         self.ModeloHabitacion = ModeloHabitacion()
         super().__init__(*args, **kwargs)
@@ -56,7 +57,12 @@ class CrearHospedamiento(QMainWindow, Ui_CrearNivel):
             print("No se encontraron datos para la habitación:", self.numeroHabitacion)
 
     def guardarCat(self):
+        datos_habitaciones = self.Modelo.opteneridpornumero(self.numeroHabitacion)
 
+        if datos_habitaciones:
+            habitacion_data = datos_habitaciones[0]
+
+            id = habitacion_data[0]
 
         nombre = self.lnl_nombreH.text()
         dpi = self.lnl_dpiH.text()
@@ -92,9 +98,9 @@ class CrearHospedamiento(QMainWindow, Ui_CrearNivel):
         if not nombre or not dpi or not fechaE or not fechaS:
             print("Faltan campos por llenar")
         else:
-            self.Modelo.CrearHospedaje(nombre, dpi, anticipo, fechaE, fechaS, num)
+            self.Modelo.CrearHospedaje(nombre, dpi, anticipo, fechaE, fechaS, id)
             self.close_event()
-        self.ModeloHabitacion.updateEstadoHabitacion(2, num)
+        self.ModeloHabitacion.updateEstadoHabitacion(2, id, self.tablaDatos)
 
     def close_event(self):
         self.close()

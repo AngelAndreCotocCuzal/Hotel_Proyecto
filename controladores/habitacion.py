@@ -7,10 +7,22 @@ class Habitacion:
 
     def obtenerDatosHabitacionInterfaz(self):
         with self.conn.cursor() as cursor:
+            sql = """SELECT h.NoHabitacion, c.Nombre, e.Estado, n.Nombre 
+                    FROM habitaciones h 
+                INNER JOIN categoriahabitacion c ON h.CategoriaHabitacion_idCategoriaHabitacion = c.idCategoriaHabitacion
+                INNER JOIN nivelhabitacion n ON h.NivelHabitacion_idNivelHabitacion = n.idNivelHabitacion 
+                INNER JOIN estadohabitacion e ON h.EstadoHabitacion_id1 = e.id
+                ORDER BY h.NoHabitacion ASC"""
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            return result
+
+    def obtenerDatosHabitacionInterfazSalida(self):
+        with self.conn.cursor() as cursor:
             sql = """SELECT h.NoHabitacion, c.Nombre, e.Estado, n.Nombre FROM habitaciones h 
             inner join categoriahabitacion c on h.CategoriaHabitacion_idCategoriaHabitacion = c.idCategoriaHabitacion
             inner join nivelhabitacion n on h.NivelHabitacion_idNivelHabitacion = n.idNivelHabitacion 
-            inner join estadohabitacion e on h.EstadoHabitacion_id1 = e.id"""
+            inner join estadohabitacion e on h.EstadoHabitacion_id1 = e.id where e.Estado = 'Ocupado'"""
             cursor.execute(sql)
             result = cursor.fetchall()
             return result
@@ -72,15 +84,6 @@ class Habitacion:
             cursor.execute(sql, (id, Nombre, Nivel))
             self.conn.commit()
 
-    def ActualizarHabitacion(self, Id, Numero, Detalle, Categoria, Nivel, Estado):
-        with self.conn.cursor() as cursor:
-            sql = """UPDATE habitaciones SET NoHabitacion = %s, Detalle = %s,
-            CategoriaHabitacion_idCategoriaHabitacion = %s,
-            NivelHabitacion_idNivelHabitacion = %s,
-            EstadoHabitacion_id1 = %s WHERE id = %s"""
-            cursor.execute(sql, (Numero, Detalle, Categoria, Nivel, Estado, Id))
-            self.conn.commit()
-
     def ActualizarEstadoHabitacion(self, Estado, id):
         print(f"este es el estado que llega: {Estado}")
         print(f"este es el id qu ellega: {id}")
@@ -107,9 +110,11 @@ class Habitacion:
 
     def obtenertablaHabitacion(self):
         with self.conn.cursor() as cursor:
-            sql = """SELECT h.NoHabitacion, c.Nombre, c.Precio, h.Detalle, n.Nombre FROM habitaciones h 
+            sql = """SELECT h.id, c.idCategoriaHabitacion, n.idNivelHabitacion, a.id,
+h.NoHabitacion, c.Nombre, c.Precio, h.Detalle, n.Nombre FROM habitaciones h 
             inner join categoriahabitacion c on h.CategoriaHabitacion_idCategoriaHabitacion = c.idCategoriaHabitacion
-            inner join nivelhabitacion n on h.NivelHabitacion_idNivelHabitacion = n.idNivelHabitacion"""
+            inner join nivelhabitacion n on h.NivelHabitacion_idNivelHabitacion = n.idNivelHabitacion
+            inner join estadohabitacion a on h.EstadoHabitacion_id1 = a.id"""
             cursor.execute(sql)
             result = cursor.fetchall()
             return result
@@ -145,3 +150,12 @@ class Habitacion:
             cursor.execute(sql)
             result = cursor.fetchall()
             return result
+
+    def updateHabitacion(self, Id, Numero, Detalle, Categoria, Nivel, Estado):
+        with self.conn.cursor() as cursor:
+            sql = """UPDATE habitaciones SET NoHabitacion = %s, Detalle = %s,
+            CategoriaHabitacion_idCategoriaHabitacion = %s,
+            NivelHabitacion_idNivelHabitacion = %s,
+            EstadoHabitacion_id1 = %s WHERE id = %s;"""
+            cursor.execute(sql, (Numero, Detalle, Categoria, Nivel, Estado, Id))
+            self.conn.commit()
