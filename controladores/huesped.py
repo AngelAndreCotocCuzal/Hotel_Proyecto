@@ -43,7 +43,16 @@ class Huesped():
             result = cursor.fetchone()
             if result:
                 return result
-  
+
+    def obteneidhuespedporNombre(self, nombreHuesped):
+        with self.conn.cursor() as cursor:
+            sql = "SELECT id FROM huesped WHERE Nombre = %s"
+            cursor.execute(sql, (nombreHuesped,))
+            result = cursor.fetchone()
+            if result:
+                return result
+
+
     def eliminarHuesped(self, id):
         with self.conn.cursor() as cursor:
             sql = "DELETE FROM huesped WHERE id = '"+id+"'"

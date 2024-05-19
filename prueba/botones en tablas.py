@@ -1,6 +1,17 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QPushButton, QVBoxLayout, QWidget
 
 
+class prueba(QMainWindow):
+
+    def __init__(self):
+        super().__init__()
+        import datetime
+
+    # Obtener la fecha actual
+        fecha_actual = datetime.date.today()
+
+        print("La fecha de hoy es:", fecha_actual)
+
 class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -44,6 +55,6 @@ class MyWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication([])
-    window = MyWindow()
+    window = prueba()
     window.show()
     app.exec()

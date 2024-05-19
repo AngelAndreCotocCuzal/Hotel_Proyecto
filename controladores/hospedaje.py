@@ -4,11 +4,11 @@ class RegistrarHospedaje:
     def __init__(self):
         self.conn = conecciones()
 
-    def insertarHospedaje(self, nombre, dpi, anticipo, fehcaE, fechaS, num):
+    def insertarHospedaje(self, nombre, dpi,razon, num):
         id = self.obteneridHuesped()
         with self.conn.cursor() as cursor:
-            sql = """INSERT INTO huesped (id, Nombre, DPI, Anticipo, FechaEntrada, FechaSalida, habitaciones_id) VALUES (%s, %s,%s, %s, %s, %s, %s)"""
-            cursor.execute(sql, (id, nombre, dpi, anticipo, fehcaE, fechaS, num))
+            sql = """INSERT INTO huesped (id, Nombre, DPI, RazonVisita, habitaciones_id) VALUES (%s, %s, %s, %s, %s)"""
+            cursor.execute(sql, (id, nombre, dpi,  razon, num))
             self.conn.commit()
 
     def obtenerIdsHabitacionesOcupadas(self):

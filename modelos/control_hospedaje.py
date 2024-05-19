@@ -20,10 +20,10 @@ class ModeloHospedaje:
     def habitacionesenuso(self):
         habitaciones = self.modeloCategoria.habitacionesenuso()
         return habitaciones
-    def CrearHospedaje(self, nombre, dpi, anticipo, fechaE, fechaS, num):
+    def CrearHospedaje(self, nombre, dpi, razon, num):
 
 
-        self.modeloCategoria.insertarHospedaje(nombre, dpi, anticipo, fechaE, fechaS, num)
+        self.modeloCategoria.insertarHospedaje(nombre, dpi, razon, num)
 
     def datosporHabitacion(self, numeroHabitacion):
         datos = self.modeloCategoria.obtenerdatosporHabitacion(numeroHabitacion)

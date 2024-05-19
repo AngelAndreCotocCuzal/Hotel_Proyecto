@@ -49,3 +49,8 @@ class ModeloHuesped():
             if prov:
                 self.modeloHuesped.eliminarHuesped(cod)
         self.listarHuesped(table)
+
+
+    def onteneridhuespedporNombre(self, nombrehuesped):
+        huesped = self.modeloHuesped.obteneidhuespedporNombre(nombrehuesped)
+        return huesped[0]

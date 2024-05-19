@@ -1473,9 +1473,9 @@ color: rgba(106,105,103,255);
                     <property name="geometry">
                      <rect>
                       <x>10</x>
-                      <y>90</y>
+                      <y>80</y>
                       <width>1041</width>
-                      <height>631</height>
+                      <height>641</height>
                      </rect>
                     </property>
                     <property name="styleSheet">
@@ -1533,9 +1533,9 @@ QTableWidget::item {
                       <property name="geometry">
                        <rect>
                         <x>10</x>
-                        <y>30</y>
+                        <y>370</y>
                         <width>1011</width>
-                        <height>561</height>
+                        <height>241</height>
                        </rect>
                       </property>
                       <attribute name="horizontalHeaderDefaultSectionSize">
@@ -1576,6 +1576,75 @@ QTableWidget::item {
                         <string>Fecha Salida</string>
                        </property>
                       </column>
+                     </widget>
+                     <widget class="QTableWidget" name="tab_ReporteFacturas">
+                      <property name="geometry">
+                       <rect>
+                        <x>10</x>
+                        <y>60</y>
+                        <width>1011</width>
+                        <height>241</height>
+                       </rect>
+                      </property>
+                      <attribute name="horizontalHeaderDefaultSectionSize">
+                       <number>135</number>
+                      </attribute>
+                      <column>
+                       <property name="text">
+                        <string>id</string>
+                       </property>
+                      </column>
+                      <column>
+                       <property name="text">
+                        <string>usuario_id</string>
+                       </property>
+                      </column>
+                      <column>
+                       <property name="text">
+                        <string>huesped_id</string>
+                       </property>
+                      </column>
+                      <column>
+                       <property name="text">
+                        <string>Fecha Factura</string>
+                       </property>
+                      </column>
+                      <column>
+                       <property name="text">
+                        <string>Usuario</string>
+                       </property>
+                      </column>
+                      <column>
+                       <property name="text">
+                        <string>Huesped</string>
+                       </property>
+                      </column>
+                     </widget>
+                     <widget class="QLabel" name="label_8">
+                      <property name="geometry">
+                       <rect>
+                        <x>10</x>
+                        <y>320</y>
+                        <width>321</width>
+                        <height>31</height>
+                       </rect>
+                      </property>
+                      <property name="text">
+                       <string>Reporte habitaciones</string>
+                      </property>
+                     </widget>
+                     <widget class="QLabel" name="label_9">
+                      <property name="geometry">
+                       <rect>
+                        <x>10</x>
+                        <y>10</y>
+                        <width>321</width>
+                        <height>31</height>
+                       </rect>
+                      </property>
+                      <property name="text">
+                       <string>Reporte facturas</string>
+                      </property>
                      </widget>
                     </widget>
                     <widget class="QWidget" name="ventas">

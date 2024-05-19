@@ -2,6 +2,7 @@ from PyQt5.uic import loadUiType
 from PyQt5 import QtCore
 from modelos.control_hospedaje import ModeloHospedaje
 from modelos.control_habitacion import ModeloHabitacion
+from modelos.control_Salida import ModeloRegistro
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QDialog
 
 
@@ -16,6 +17,7 @@ class CrearHospedamiento(QMainWindow, Ui_CrearNivel):
         self.tablaDatos = tablaDatos
         self.Modelo = ModeloHospedaje()
         self.ModeloHabitacion = ModeloHabitacion()
+        self.ModeloFactura = ModeloRegistro()
         super().__init__(*args, **kwargs)
 
         self.setupUi(self)
@@ -67,8 +69,21 @@ class CrearHospedamiento(QMainWindow, Ui_CrearNivel):
         nombre = self.lnl_nombreH.text()
         dpi = self.lnl_dpiH.text()
         adelanto_text = self.lnl_adelanto.text()
+        razon = self.lnl_razon.text()
         fechaE = self.lnl_fechaEntrada.text()
-        fechaS = self.lnl_FechaSalida.text()
+        # fechaS = self.lnl_FechaSalida.text()
+        # Obtener los valores de los campos de texto y convertirlos a números
+        adelanto = float(self.lnl_adelanto.text())
+        descuento = float(self.lnl_descuento.text())
+        subtotal = float(self.lnl_precio.text())
+
+        # Calcular el subtotal restando el descuento
+        subtotal -= descuento
+
+        # Calcular el total restando el adelanto
+        total = subtotal - adelanto
+
+        # Asegurarse de manejar los casos donde los campos de texto estén vacíos o no sean números
 
         # Obtener el texto del QLineEdit
         texto = self.lnl_numeroHabitacion.text()
@@ -95,11 +110,16 @@ class CrearHospedamiento(QMainWindow, Ui_CrearNivel):
             print("El campo de adelanto está vacío")
             return
 
-        if not nombre or not dpi or not fechaE or not fechaS:
+        if not nombre or not dpi:
             print("Faltan campos por llenar")
         else:
-            self.Modelo.CrearHospedaje(nombre, dpi, anticipo, fechaE, fechaS, id)
+            fechaS = None
+            idExtras = None
+            idFactura = None
+            self.Modelo.CrearHospedaje(nombre, dpi,  razon, id)
             self.close_event()
+            self.ModeloFactura.ingresarFechaEntrada(fechaS, fechaE, subtotal,
+                                                    descuento, anticipo, total, idExtras, id, idFactura)
         self.ModeloHabitacion.updateEstadoHabitacion(2, id, self.tablaDatos)
 
     def close_event(self):

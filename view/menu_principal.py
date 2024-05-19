@@ -120,7 +120,7 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         self.btn_crearHab.clicked.connect(self.pg_CrearHabitacion)
 
         # ----------------------------------------- Botones de Registro -----------------------------
-        self.btn_registro.clicked.connect(lambda: self.ModeloRegistro.listarRegistro(self.tab_Reporte))
+        self.btn_registro.clicked.connect(lambda: self.ModeloRegistro.listarFactura(self.tab_ReporteFacturas))
 
     # Dentro del método cambiar_nombres_de_pestanas():
 
@@ -262,7 +262,7 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
                 button = QPushButton(f"Habitación {habitacion[0]}\nTipo: {habitacion[1]}\nEstado: {estado}")
 
             # Conecta la señal clicked del botón a la función pg_CrearHospedamiento con el número de habitación correspondiente
-                button.clicked.connect(lambda _, num=habitacion[0]: self.pg_CrearSalida())
+                button.clicked.connect(lambda _, num=habitacion[0]: self.pg_CrearSalida(num))
                 layout.addWidget(button)
 
             # Establecer el diseño en la pestaña y agregarla al QTabWidget
@@ -277,8 +277,8 @@ class Main_menuPrincipal(QMainWindow, Ui_MainWindow):
         numero_niveles = self.ModeloNivel.numeroNivel()
         return numero_niveles
 
-    def pg_CrearSalida(self):
-        self.crearHabitacionWindow = CrearSalida(self.tab_Reporte)
+    def pg_CrearSalida(self, num):
+        self.crearHabitacionWindow = CrearSalida(self.tab_Reporte, self.tab_ReporteFacturas,num)
         self.crearHabitacionWindow.show()
 
     def pg_CrearHospedamiento(self, numero_habitacion):
